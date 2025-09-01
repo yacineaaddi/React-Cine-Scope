@@ -10,11 +10,11 @@ _A live demo link will be added here soon._
 
 - **Movie Search** : Search and browse movies with real-time results.
 
-- **Movie Details** : View information such as title, poster, release year, and ratings.
+- **Watched Movies** : Track movies you’ve already watched and rate them.
 
 - **Watchlist Management** : Add or remove movies from your personal watchlist.
 
-- **Watched Movies** : Track movies you’ve already watched and rate them.
+- **Movie Details** : View information such as title, poster, release year, and ratings.
 
 ## ⚙️ Installation
 
@@ -43,13 +43,13 @@ _A live demo link will be added here soon._
 
 ## 🛠️ Technologies Used
 
-- 🌐 OMDb API (optional) : For fetching movie data.
-
 - 🎨 CSS : Styling and responsive layout.
 
-- ⚙️ JavaScript (ES6+) : App logic and interactivity.
-
 - ⚛️ React : Component-based UI development.
+
+- 🌐 OMDb API (optional) : For fetching movie data.
+
+- ⚙️ JavaScript (ES6+) : App logic and interactivity.
 
 ## 📁 Folder Structure
 
