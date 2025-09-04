@@ -5,6 +5,7 @@ A movie tracking application built with HTML, CSS, React, and JavaScript. This a
 ## 🔗 Demo
 
 _A live demo link will be added here soon._
+www.reactcinescope.com
 
 ## ✨ Features
 
