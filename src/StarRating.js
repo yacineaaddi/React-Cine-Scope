@@ -1,10 +1,13 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const containerStyle = {
   display: "flex",
   alignItems: "center",
   gap: "16px",
 };
+
+// typchecking to component props using proptypes
 
 const starContainerStyle = {
   display: "flex",
@@ -26,7 +29,7 @@ export default function StarRating({
   }
 
   const textStyle = {
-    ligneHeight: "1",
+    lineHeight: "1",
     margin: "0",
     color,
     fontSize: `${size / 1.5}px`,
@@ -55,6 +58,15 @@ export default function StarRating({
     </div>
   );
 }
+
+StarRating.propTypes = {
+  maxRating: PropTypes.number,
+  color: PropTypes.string,
+  size: PropTypes.number,
+  className: PropTypes.string,
+  messages: PropTypes.array,
+  defaultRating: PropTypes.number,
+};
 
 function Star({ onRate, full, MouseIn, MouseOut, color, size }) {
   const starStyle = {
