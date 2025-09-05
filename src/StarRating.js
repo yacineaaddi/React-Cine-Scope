@@ -16,10 +16,10 @@ export default function StarRating({
   size = 48,
   className = "",
   messages = [],
-  defaulRating,
+  defaultRating,
 }) {
-  const [rating, setRating] = useState(8);
-  const [temprating, setTempRating] = useState("0");
+  const [rating, setRating] = useState(defaultRating);
+  const [temprating, setTempRating] = useState(0);
 
   function handleRating(rating) {
     setRating(rating);
@@ -29,7 +29,7 @@ export default function StarRating({
     ligneHeight: "1",
     margin: "0",
     color,
-    fontSize: `${size / 1.5} px`,
+    fontSize: `${size / 1.5}px`,
   };
 
   return (
