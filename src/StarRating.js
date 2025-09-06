@@ -7,8 +7,6 @@ const containerStyle = {
   gap: "16px",
 };
 
-// typchecking to component props using proptypes
-
 const starContainerStyle = {
   display: "flex",
 };
@@ -58,6 +56,8 @@ export default function StarRating({
     </div>
   );
 }
+
+// Type checking component props using PropTypes
 
 StarRating.propTypes = {
   maxRating: PropTypes.number,
