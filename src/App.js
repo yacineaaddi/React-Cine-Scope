@@ -253,6 +253,17 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
   }
   useEffect(
     function () {
+      if (!title) return;
+      document.title = `Movie | ${title}`;
+
+      return function () {
+        document.title = "Cine Scope";
+      };
+    },
+    [title]
+  );
+  useEffect(
+    function () {
       async function getMovieDetails() {
         setIsLoading(true);
         const res = await fetch(
