@@ -50,12 +50,30 @@ body {
 }
 
 .box {
-  width: 42rem;
-  max-width: 42rem;
+  width: 60rem;
+  max-width: 60rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   overflow: scroll;
   position: relative;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: none;
+  width: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: purple;
+  width: 20px;
+  border-radius: 20px;
+}
+::-webkit-scrollbar-corner {
+  display: none;
+}
+::-webkit-resizer {
+  display: none;
 }
 
 .loader {
@@ -191,7 +209,6 @@ body {
 .btn-delete {
   position: absolute;
   right: 2.4rem;
-
   height: 1.8rem;
   aspect-ratio: 1;
   border-radius: 50%;
@@ -289,9 +306,18 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  align-items: center;
+}
+.movie-desc {
+  align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .btn-add {
+  width: 22rem;
   background-color: var(--color-primary);
   color: var(--color-text);
   border: none;

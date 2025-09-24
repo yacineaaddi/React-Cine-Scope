@@ -24,36 +24,39 @@ const tempMovieData = [
       "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
   },
 ];
-
+/*
 const tempWatchedData = [
   {
-    imdbID: "tt1375666",
-    Title: "Inception",
-    Year: "2010",
+    imdbID: "tt0317919",
+    Title: "Mission: Impossible III",
+    Year: "2006",
     Poster:
-      "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-    runtime: 148,
-    imdbRating: 8.8,
+      "https://m.media-amazon.com/images/M/MV5BNzY1MzdjMjYtNDJiZS00N2U4LWI0MWQtZTRiZWYxMzU3ZmI4XkEyXkFqcGc@._V1_SX300.jpg",
+    runtime: 126,
+    imdbRating: 6.9,
     userRating: 10,
   },
   {
-    imdbID: "tt0088763",
-    Title: "Back to the Future",
-    Year: "1985",
+    imdbID: "tt4415360",
+    Title: "The Science of Interstellar",
+    Year: "2014",
     Poster:
-      "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
-    runtime: 116,
-    imdbRating: 8.5,
+      "https://m.media-amazon.com/images/M/MV5BZDU5NTJkMjQtNGYyZC00NjYwLWJlNWMtODk5NDI5MDE3NDJiXkEyXkFqcGc@._V1_SX300.jpg",
+    runtime: 51,
+    imdbRating: 7.1,
     userRating: 9,
   },
-];
+];*/
 const KEY = "eb9e69f";
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [watched, setWatched] = useState(tempWatchedData);
-  const [movies, setMovies] = useState(tempMovieData);
+  const [watched, setWatched] = useState(function () {
+    const watchedMovie = localStorage.getItem("Watched");
+    return JSON.parse(watchedMovie);
+  });
+  const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, SetError] = useState("");
   const [query, setQuery] = useState("");
@@ -67,11 +70,18 @@ export default function App() {
   }
   function handleAddWached(movie) {
     setWatched((watched) => [...watched, movie]);
-    console.log(watched);
   }
   function handleDeleteWatchedMovie(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
+
+  useEffect(
+    function () {
+      localStorage.setItem("Watched", JSON.stringify(watched));
+    },
+    [watched]
+  );
+
   useEffect(
     function () {
       const controller = new AbortController();
@@ -88,11 +98,10 @@ export default function App() {
           const data = await res.json();
           if (data.Response === "False") throw new Error("No Movies Found");
           setMovies(data.Search);
-          console.log(data);
           SetError("");
         } catch (err) {
-          console.log(err.message);
           if (err.name !== "AbortError") {
+            console.log(err.message);
             SetError(err.message);
           }
         } finally {
@@ -105,6 +114,7 @@ export default function App() {
         SetError("");
         return;
       }
+      handleCloseMoviedetail();
       fetchMovies();
     },
     [query]
@@ -242,6 +252,8 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
     (movie) => movie.imdbID === selectedMovie
   )?.userRating;
 
+  // Add feature to add movies to watched list
+
   function handleAdd() {
     const newWatchedMovie = {
       imdbID: selectedMovie,
@@ -253,9 +265,10 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
       userRating,
     };
     onAddWatched(newWatchedMovie);
-    console.log(userRating);
     onCloseMovie();
   }
+
+  // Use useEffect cleanup function to reset title
 
   useEffect(
     function () {
@@ -268,6 +281,9 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
     },
     [title]
   );
+
+  // Enable closing movie details with ESC keypress
+
   useEffect(
     function () {
       async function getMovieDetails() {
@@ -276,11 +292,11 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
           `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedMovie}`
         );
         const data = await res.json();
-        console.log(data);
         setMovie(data);
-        console.log(movie);
+        console.log(data);
         setIsLoading(false);
       }
+
       getMovieDetails();
     },
     [selectedMovie]
@@ -327,15 +343,18 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
                 </>
               ) : (
                 <p>
-                  You rated this movie with {watchedUserRating} <span>⭐</span>
+                  Already added to watched list and rated {watchedUserRating}
+                  <span>⭐</span>
                 </p>
               )}
             </div>
-            <p>
-              <em>{plot}</em>
-            </p>
-            <p>Starring {actors}</p>
-            <p>Directed by {director}</p>
+            <div className="movie-desc">
+              <p>
+                <em>{plot}</em>
+              </p>
+              <p>Starring {actors}</p>
+              <p>Directed by {director}</p>
+            </div>
           </section>
         </>
       )}
@@ -427,7 +446,7 @@ function WatchedSummary({ watched }) {
         </p>
         <p>
           <span>⏳</span>
-          <span>{avgRuntime} min</span>
+          <span>{avgRuntime.toFixed(0)} min</span>
         </p>
       </div>
     </div>
