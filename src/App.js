@@ -241,7 +241,7 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState("");
-
+  const countRef = useRef(0);
   const {
     Title: title,
     Year: year,
@@ -262,7 +262,13 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedMovie
   )?.userRating;
-
+  //Add feature of counting user rates
+  useEffect(
+    function () {
+      if (userRating) countRef.current++;
+    },
+    [userRating]
+  );
   // Add feature to add movies to watched list
 
   function handleAdd() {
@@ -274,6 +280,7 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
       imdbRating: Number(imdbRating),
       runtime: parseInt(runtime),
       userRating,
+      CountRatingDesicions: countRef.current,
     };
     onAddWatched(newWatchedMovie);
     onCloseMovie();
