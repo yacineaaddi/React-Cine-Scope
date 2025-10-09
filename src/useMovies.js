@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 const KEY = "eb9e69f";
 
-export default function useMovies({ query }) {
+export default function useMovies(query) {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, SetError] = useState("");
