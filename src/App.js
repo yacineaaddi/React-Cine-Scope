@@ -1,48 +1,26 @@
 import { useState, useEffect, useRef } from "react";
 import StarRating from "./StarRating";
+import useMovies from "./useMovies";
 /*
-const tempMovieData = [
+const tempWatchedData = [
   {
     imdbID: "tt1375666",
     Title: "Inception",
     Year: "2010",
     Poster:
       "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-  },
-  {
-    imdbID: "tt0133093",
-    Title: "The Matrix",
-    Year: "1999",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
-  },
-  {
-    imdbID: "tt6751668",
-    Title: "Parasite",
-    Year: "2019",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
-  },
-];
-const tempWatchedData = [
-  {
-    imdbID: "tt0317919",
-    Title: "Mission: Impossible III",
-    Year: "2006",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BNzY1MzdjMjYtNDJiZS00N2U4LWI0MWQtZTRiZWYxMzU3ZmI4XkEyXkFqcGc@._V1_SX300.jpg",
-    runtime: 126,
-    imdbRating: 6.9,
+    runtime: 148,
+    imdbRating: 8.8,
     userRating: 10,
   },
   {
-    imdbID: "tt4415360",
-    Title: "The Science of Interstellar",
-    Year: "2014",
+    imdbID: "tt0088763",
+    Title: "Back to the Future",
+    Year: "1985",
     Poster:
-      "https://m.media-amazon.com/images/M/MV5BZDU5NTJkMjQtNGYyZC00NjYwLWJlNWMtODk5NDI5MDE3NDJiXkEyXkFqcGc@._V1_SX300.jpg",
-    runtime: 51,
-    imdbRating: 7.1,
+      "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
+    runtime: 116,
+    imdbRating: 8.5,
     userRating: 9,
   },
 ];*/
@@ -54,12 +32,12 @@ export default function App() {
   const [watched, setWatched] = useState(function () {
     const watchedMovie = localStorage.getItem("Watched");
     return JSON.parse(watchedMovie);
-  });
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, SetError] = useState("");
+  }); /*
+  const [watched, setWatched] = useState(tempWatchedData);*/
+
   const [query, setQuery] = useState("");
   const [selectedMovie, SetselectedMovie] = useState("");
+  const { movies, isLoading, error } = useMovies(query);
 
   function handleSetselectedMovie(id) {
     SetselectedMovie((selectedId) => (id === selectedId ? null : id));
@@ -79,44 +57,6 @@ export default function App() {
       localStorage.setItem("Watched", JSON.stringify(watched));
     },
     [watched]
-  );
-
-  useEffect(
-    function () {
-      const controller = new AbortController();
-      async function fetchMovies() {
-        try {
-          SetError("");
-          setIsLoading(true);
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal }
-          );
-          if (!res.ok) throw new Error("Something went wrong");
-
-          const data = await res.json();
-          if (data.Response === "False") throw new Error("No Movies Found");
-          setMovies(data.Search);
-          SetError("");
-        } catch (err) {
-          if (err.name !== "AbortError") {
-            console.log(err.message);
-            SetError(err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      if (query.length < 3) {
-        setMovies([]);
-        SetError("");
-        return;
-      }
-      handleCloseMoviedetail();
-      fetchMovies();
-    },
-    [query]
   );
 
   return (
@@ -262,6 +202,7 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedMovie
   )?.userRating;
+
   //Add feature of counting user rates
   useEffect(
     function () {
