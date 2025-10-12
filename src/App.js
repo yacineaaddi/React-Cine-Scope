@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import StarRating from "./StarRating";
 import useMovies from "./useMovies";
+import useKey from "./useKey";
 import useLocalStorageState from "./useLocalStorageState";
 /*
 const tempWatchedData = [
@@ -125,6 +126,14 @@ function Logo() {
 
 function Search({ query, setQuery }) {
   const inputEl = useRef(null);
+
+  useKey("Enter", function () {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery("");
+  });
+
+  /*
   useEffect(
     function () {
       function callback(e) {
@@ -138,7 +147,7 @@ function Search({ query, setQuery }) {
       return () => document.removeEventListener("keydown", callback);
     },
     [setQuery]
-  );
+  );*/
   return (
     <input
       className="search"
@@ -236,6 +245,7 @@ function MovieDetails({ selectedMovie, onCloseMovie, onAddWatched, watched }) {
     [title]
   );
 
+  useKey("Escape", onCloseMovie);
   // Enable closing movie details with ESC keypress
 
   useEffect(
